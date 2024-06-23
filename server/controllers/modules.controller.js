@@ -21,6 +21,32 @@ modulesCtrl.getModule = async (req, res) => {
     }
 };
 
+// Get by courses_id
+modulesCtrl.getModuleByCourse = async (req, res) => {
+    try {
+        const getmodule = await mod.find({ courses_id: req.params.courses_id });
+        if (!getmodule) {
+            return res.status(404).json({ message: 'Module not found' });
+        }
+        res.json(getmodule);
+    } catch (error) {
+        res.status(500).json({ message: 'Error getting module', error });
+    }
+};
+
+// Get by resources_id
+modulesCtrl.getModuleByResource = async (req, res) => {
+    try {
+        const getmodule = await mod.find({ resources_id: req.params.resources_id });
+        if (!getmodule) {
+            return res.status(404).json({ message: 'Module not found' });
+        }
+        res.json(getmodule);
+    } catch (error) {
+        res.status(500).json({ message: 'Error getting module', error });
+    }
+};
+
 // Post
 modulesCtrl.createModule = async (req, res) => {
     try {

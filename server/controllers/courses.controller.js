@@ -22,6 +22,32 @@ coursesCtrl.getCourse = async (req, res) => {
     }
 }
 
+// Get by categories_id
+coursesCtrl.getCourseByCategory = async (req, res) => {
+    try{
+        const getcourse = await course.find({ categories_id: req.params.categories_id });
+        if (!getcourse) {
+            return res.status(404).json({ message: 'Course not found' });
+        }
+        res.json(getcourse);
+    } catch (error) {
+        res.status(500).json({ message: 'Error getting course', error });
+    }
+}
+
+// Get by mentors_id
+coursesCtrl.getCourseByMentor = async (req, res) => {
+    try{
+        const getcourse = await course.find({ mentors_id: req.params.mentors_id });
+        if (!getcourse) {
+            return res.status(404).json({ message: 'Course not found' });
+        }
+        res.json(getcourse);
+    } catch (error) {
+        res.status(500).json({ message: 'Error getting course', error });
+    }
+}
+
 // Post
 coursesCtrl.createCourse = async (req, res) => {
     try{

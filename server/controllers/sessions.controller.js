@@ -21,6 +21,32 @@ sessionsCtrl.getSession = async (req, res) => {
     }
 };
 
+// Get by students_id
+sessionsCtrl.getSessionByStudent = async (req, res) => {
+    try {
+        const getsession = await session.find({ students_id: req.params.students_id });
+        if (!getsession) {
+            return res.status(404).json({ message: 'Session not found' });
+        }
+        res.json(getsession);
+    } catch (error) {
+        res.status(500).json({ message: 'Error getting session', error });
+    }
+};
+
+// Get by mentorship_id
+sessionsCtrl.getSessionByMentorship = async (req, res) => {
+    try {
+        const getsession = await session.find({ mentorship_id: req.params.mentorship_id });
+        if (!getsession) {
+            return res.status(404).json({ message: 'Session not found' });
+        }
+        res.json(getsession);
+    } catch (error) {
+        res.status(500).json({ message: 'Error getting session', error });
+    }
+};
+
 // Post
 sessionsCtrl.createSession = async (req, res) => {
     try {

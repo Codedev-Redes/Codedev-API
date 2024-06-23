@@ -21,6 +21,20 @@ studentsCtrl.getStudent = async (req, res) => {
     }
 }
 
+// Got by email
+studentsCtrl.getStudentByEmail = async (req, res) => {
+    try{
+        const getstudent = await student.findOne({email: req.params.email});
+        if (!getstudent) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+        res.json(getstudent);
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Error getting student', error });
+    }   
+}
+
 // Post
 studentsCtrl.createStudent = async (req, res) => {
     try{

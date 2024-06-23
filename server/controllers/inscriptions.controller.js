@@ -21,6 +21,19 @@ inscriptionsCtrl.getInscription = async (req, res) => {
     }
 }
 
+// Get by students_id
+inscriptionsCtrl.getInscriptionByStudent = async (req, res) => {
+    try{
+        const getInscription = await inscription.find({ students_id: req.params.students_id });
+        if (!getInscription) {
+            return res.status(404).json({ message: 'Inscription not found' });
+        }
+        res.json(getInscription);
+    } catch (error){
+        res.status(500).json({ message: 'Error getting inscription', error });
+    }
+}
+
 // Create a inscription
 inscriptionsCtrl.createInscription = async (req, res) => {
     try{

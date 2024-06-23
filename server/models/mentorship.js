@@ -28,4 +28,5 @@ const mentorship = new Schema({
     }
 }, { versionKey: false });
 
-module.exports = model('mentorship', mentorship);
+
+module.exports = model('mentorships', mentorship);
