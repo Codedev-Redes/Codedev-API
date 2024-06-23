@@ -1,0 +1,21 @@
+version: "3"
+services:
+  webapp:
+    container_name: contenedor_app
+    restart: always
+    build: .
+    ports:
+      - "5000:80"
+    links:
+      - database
+    environment:
+      - MONGODB_HOST=20.51.204.0
+      - MONGODB_PORT=27017
+      - MONGODB_DB=codedev
+  database:
+    container_name: contenedor_db
+    image: mongo
+    ports:
+    - "27019:27017"
+
+    
