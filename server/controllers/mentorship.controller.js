@@ -18,6 +18,16 @@ mentorshipCtrl.getMentorship = async (req, res) => {
     }
 }
 
+// Get a mentorship by mentor_id
+mentorshipCtrl.getMentorshipByMentor = async (req, res) => {
+    try{
+        const getMentorship = await mentorship.find({ mentors_id: req.params.mentors_id });
+        res.json(getMentorship);
+    } catch (error){
+        res.json({message: error});
+    }
+}
+
 // Create a mentorship
 mentorshipCtrl.createMentorship = async (req, res) => {
     try{

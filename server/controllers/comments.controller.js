@@ -21,6 +21,32 @@ commentsCtrl.getComment = async (req, res) => {
     }
 }
 
+// Get by students_id
+commentsCtrl.getCommentByStudent = async (req, res) => {
+    try{
+        const getComment = await Comment.find({ students_id: req.params.students_id });
+        if (!getComment) {
+            return res.status(404).json({ message: 'Comment not found' });
+        }
+        res.json(getComment);
+    } catch (error) {
+        res.status(500).json({ message: 'Error getting comment', error });
+    }
+}
+
+// Get by courses_id
+commentsCtrl.getCommentByCourse = async (req, res) => {
+    try {
+        const getComment = await Comment.find({ courses_id: req.params.courses_id });
+        if (!getComment) {
+            return res.status(404).json({ message: 'Comment not found' });
+        }
+        res.json(getComment);
+    } catch (error) {
+        res.status(500).json({ message: 'Error getting comment', error });
+    }
+}
+
 // Post
 commentsCtrl.createComment = async (req, res) => {
     try{

@@ -4,7 +4,8 @@ const router = Router();
 const { 
     getInscriptions, 
     getInscription, 
-    createInscription, 
+    getInscriptionByStudent,
+    createInscription,
     updateInscription, 
     deleteInscription } = require('../controllers/inscriptions.controller');
 
@@ -13,6 +14,9 @@ router.get('/inscriptions', getInscriptions);
 
 // Get a inscription
 router.get('/inscriptions/:id', getInscription);
+
+// Get by students_id
+router.get('/inscriptions/:students_id/students', getInscriptionByStudent);
 
 // Create a inscription
 router.post('/inscriptions', createInscription);

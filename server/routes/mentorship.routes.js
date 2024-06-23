@@ -4,24 +4,28 @@ const router = Router();
 const {
     getMentorships,
     getMentorship,
+    getMentorshipByMentor,
     createMentorship,
     updateMentorship,
     deleteMentorship
 } = require('../controllers/mentorship.controller');
 
 // Get
-router.get('/mentorship', getMentorships);
+router.get('/mentorships', getMentorships);
 
 // Get by id
-router.get('/mentorship/:id', getMentorship);
+router.get('/mentorships/:id', getMentorship);
+
+// Get by mentor_id
+router.get('/mentorships/:mentors_id/mentors', getMentorshipByMentor);
 
 // Post
-router.post('/mentorship', createMentorship);
+router.post('/mentorships', createMentorship);
 
 // Update
-router.put('/mentorship/:id', updateMentorship);
+router.put('/mentorships/:id', updateMentorship);
 
 // Delete
-router.delete('/mentorship/:id', deleteMentorship);
+router.delete('/mentorships/:id', deleteMentorship);
 
 module.exports = router;

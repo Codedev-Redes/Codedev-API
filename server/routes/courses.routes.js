@@ -4,6 +4,8 @@ const router = Router();
 const {
     getCourses,
     getCourse,
+    getCourseByCategory,
+    getCourseByMentor,
     createCourse,
     putCourse,
     deleteCourse } = require('../controllers/courses.controller');
@@ -13,6 +15,12 @@ router.get('/courses', getCourses);
 
 // Get by id
 router.get('/courses/:id', getCourse);
+
+// Get by categories_id
+router.get('/courses/:categories_id/categories', getCourseByCategory);
+
+// Get by mentors_id
+router.get('/courses/:mentors_id/mentors', getCourseByMentor);
 
 // Post
 router.post('/courses', createCourse);
