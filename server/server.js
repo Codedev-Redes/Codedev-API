@@ -59,8 +59,14 @@ const fileSchema = new mongoose.Schema({
     contentType: String,
     length: Number,
 });
+const filesSchema = new mongoose.Schema({
+    length: Number,
+    chunkSize: String,
+    uploadDate: String,
+    filename: String,
+});
 const File = mongoose.model('File', fileSchema);
-
+const Files = mongoose.model('Fs.files', filesSchema);
 
 connection.on("open", () => {
     console.log("connection established successfully")
@@ -71,16 +77,14 @@ connection.on("open", () => {
 
     app.post("/upload", upload.single("file"), async (req, res) => {
         let { file } = req
-        console.log(file)
-
         let { fieldname, originalname, mimetype, buffer } = file
 
+        // Create a new file 
         let newFile = new File({
             filename: file.originalname,
             contentType: mimetype,
             length: buffer.length,
         })
-
 
         try {
             let uploadStream = bucket.openUploadStream(fieldname)
@@ -88,13 +92,11 @@ connection.on("open", () => {
             readBuffer.push(buffer)
             readBuffer.push(null)
 
-
             const isUploaded = await new Promise((resolve, reject) => {
                 readBuffer.pipe(uploadStream)
                     .on("finish", resolve((uploadStream.id.toString())))
                     .on("error", reject("error occured while creating stream"))
             })
-
 
             newFile.id = uploadStream.id
             let savedFile = await newFile.save()
@@ -107,10 +109,9 @@ connection.on("open", () => {
             console.error("Error al subir archivo:", err);
             res.send("error uploading file")
         }
-
-
     })
 
+    
     app.get("/getFile/:fileId", (req, res) => {
         let { fileId } = req.params
 
@@ -119,9 +120,59 @@ connection.on("open", () => {
         downloadStream.on("file", (file) => {
             res.set("Content-Type", file.contentType)
         })
-
+        
+        downloadStream.on("error", (err) => {
+            res.status(500).send("Error downloading file: " + err);
+        });
+        
         downloadStream.pipe(res)
     })
+
+    app.get("/getFiles", async (req, res) => {
+        let files = await File.find({})
+        res.send(files)
+    })
+
+    app.get("/getVideos", async (req, res) => {
+        let files = await File.find({});
+        // Filtrar videos por extensión del nombre de archivo
+        const videoExtensions = [".mp4", ".webm", ".ogg", ".avi", ".mov", ".flv", ".wmv", ".mkv", ".3gp"];
+        files = files.filter((file) => {
+            return videoExtensions.some(extension => file.filename.endsWith(extension));
+        });
+        res.send(files);
+    });
+
+    app.get("/getImages", async (req, res) => {
+        let files = await File.find({});
+        // Filtrar imágenes por extensión del nombre de archivo
+        const imageExtensions = [".png", ".jpg", ".jpeg", ".gif", ".svg", ".bmp", ".webp", ".ico"];
+        files = files.filter((file) => {
+            return imageExtensions.some(extension => file.filename.endsWith(extension));
+        });
+        res.send(files);
+    });
+
+    app.get("/getMetadata", async (req, res) => {
+        let filesMetadata = await Files.find({});
+        let files = await File.find({});
+
+        // Filtrar videos por extensión del nombre de archivo
+        const videoExtensions = [".mp4", ".webm", ".ogg", ".avi", ".mov", ".flv", ".wmv", ".mkv", ".3gp"];
+        files = files.filter(file => videoExtensions.some(extension => file.filename.endsWith(extension)));
+
+        filesMetadata = filesMetadata.filter(metadata => files.some(file => file.length.toString() === metadata.length.toString()));
+
+        //add new information to filesMetadata like filename
+        filesMetadata.forEach(metadata => {
+            files.forEach(file => {
+                if (metadata.length.toString() === file.length.toString()) {
+                    metadata.filename = file.filename;
+                }
+            });
+        });
+        res.send(filesMetadata);
+    });
 })
 
 module.exports = app;
