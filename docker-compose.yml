@@ -5,7 +5,7 @@ services:
     restart: always
     build: .
     ports:
-      - "5000:80"
+      - "80:80"
     links:
       - database
     environment:
@@ -16,6 +16,6 @@ services:
     container_name: contenedor_db
     image: mongo
     ports:
-    - "27019:27017"
+    - "27017:27017"
 
     
